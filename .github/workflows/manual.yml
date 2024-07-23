@@ -17,4 +17,4 @@ jobs:
       uses: sonarsource/sonarqube-scan-action@v1
       env:
         SONAR_TOKEN: ${{ 134f49328f3f53621fedeaa6b0206ccf6e25bd4e }}  
-        SONAR_HOST_URL: ${{ http://13.202.98.233:9000 }} 
+        SONAR_HOST_URL: "http://13.202.98.233:9000"
