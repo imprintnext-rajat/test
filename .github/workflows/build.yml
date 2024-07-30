@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@v1
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-        #uses: docker://sonarsource/sonar-scanner-cli:latest
+      - uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_PROJECTKEY: github
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
