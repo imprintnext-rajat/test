@@ -16,6 +16,7 @@ jobs:
           fetch-depth: 0
         #uses: docker://sonarsource/sonar-scanner-cli:latest
         env:
+          SONAR_PROJECTKEY: github
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
