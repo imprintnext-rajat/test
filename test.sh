@@ -1,12 +1,8 @@
-<<<<<<< Updated upstream
-kiotfnbghithrbmn l rotbmhj'olf v
-am
-amdfmp,bd.fvfgg ldm;lg
-=======
-xgob,m fgbmffgdjklfmgv
-mkdfmfgv
-m
-bmfkg
-mfglglglglglglglgg
-
->>>>>>> Stashed changes
+uthnb
+welcom	4
+welcome test.sh
+ welcome to tes.sh in main
+uyuuyghim  
+ffrgf
+juuj
+fgtrtrtr
