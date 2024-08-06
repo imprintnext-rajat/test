@@ -1,0 +1,10 @@
+Already up to date.
+Already up to date.
+Already up to date.
+Removing yttref.sh
+Removing yrrststgsg.shd
+Removing uututu.sd
+Removing teenfnfjdh.hshu
+Auto-merging index.html
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
