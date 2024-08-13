@@ -1,11 +1,10 @@
-name: SonarQube Scan
-
+name: Build
 on:
   push:
     branches:
-      - main
-      - develop
+      - main # or the name of your main branch
       - test
+      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -14,16 +13,15 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: SonarQube Scan
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      #- uses: docker://sonarsource/sonar-scanner-cli:latest
       - uses: sonarsource/sonarqube-scan-action@master
         with:
           args: >
             -Dsonar.projectKey=github
         env:
-          #SONAR_PROJECTKEY: github
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
