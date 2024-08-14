@@ -1,53 +1,42 @@
-name: Sonar Scan
+name: Analyze pull request
 
 on:
-  # Trigger analysis when pushing to the main branch or when creating/updating pull requests.
-  push:
-    branches:
-      - main
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, edited, reopened, synchronize]
+    branches:
+      - master
+      - 'JAHIA-[0-9]-[0-9]-[0-9]-X-BRANCH'
+      - '[0-9]_[0-9]_x'
+      - '[0-9]-[0-9]-X-BRANCH'
 
 jobs:
-  sonarqube:
+  build:
+
     runs-on: ubuntu-latest
-    permissions: # permission to comment a PR
-      contents: read
-      pull-requests: write
+
     steps:
-      - uses: actions/checkout@v2
-        with:
-          # Disabling shallow clone is recommended for improving the relevancy of reporting.
-          fetch-depth: 0
+      - name: Setup sonarqube
+        uses: warchant/setup-sonar-scanner@v1
 
-      # Triggering SonarQube analysis; the results are required for the Quality Gate check.
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
+      - name: 'Checkout repository on branch: ${{ github.REF }}'
+        uses: actions/checkout@v2
         with:
-          args: >
-            -Dsonar.projectKey=github
+          ref: ${{ github.HEAD_REF }}
+
+      - name: Retrieve entire repository history
+        run: |
+          git fetch --prune --unshallow
+      - name: Run an analysis of the PR
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
-      # Check the Quality Gate status.
-      - name: SonarQube Quality Gate check
-        id: sonarqube-quality-gate-check
-        uses: sonarsource/sonarqube-quality-gate-action@master
-        # Enforce a timeout to fail the step after a specific time.
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} #OPTIONAL
-
-      - name: SonarQube Pull Request Comment
-        if: always()
-        uses: campos-pay/sonarqube-pr-comment@main
-        with:
-          sonar_token: ${{ secrets.SONAR_TOKEN }}
-          sonar_host_url: ${{ secrets.SONAR_HOST_URL }}
-          sonar_projectkey: "github"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repo_name: ${{ github.repository }}
-          pr_number: ${{ github.event.pull_request.number }}
-          github_api_base_url: "https://ourselfhostedgithub.com/api/v3" # If using github.com do this > github_api_base_url: ""
+          # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: sonar-scanner
+          -Dsonar.host.url=${{ secrets.SONAR_URL }}
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.projectKey=git
+          -Dsonar.pullrequest.key=${{ github.event.number }}
+          -Dsonar.pullrequest.branch=${{ github.HEAD_REF }}
+          -Dsonar.pullrequest.base=${{ github.BASE_REF }}
+          -Dsonar.pullrequest.github.repository=${{ github.repository }}
+          -Dsonar.scm.provider=git
+          -Dsonar.java.binaries=/tmp
