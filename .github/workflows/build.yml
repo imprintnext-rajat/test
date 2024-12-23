@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-      - test
-      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 
