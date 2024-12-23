@@ -1,10 +1,15 @@
 name: Sonar Scan
+name: SonarQube Scan
+parent of 17fdb8b (Update build.yml)
 
 on:
   # Trigger analysis when pushing to the main branch or when creating/updating pull requests.
   push:
     branches:
       - main
+      - develop
+      - test
+ parent of 17fdb8b (Update build.yml)
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -15,7 +20,8 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v2
+      - name: SonarQube Scan
+        uses: actions/checkout@v4
         with:
           # Disabling shallow clone is recommended for improving the relevancy of reporting.
           fetch-depth: 0
@@ -23,10 +29,16 @@ jobs:
       # Triggering SonarQube analysis; the results are required for the Quality Gate check.
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
+      - uses: sonarsource/sonarqube-scan-action@master
+ parent of 17fdb8b (Update build.yml)
         with:
           args: >
             -Dsonar.projectKey=github
         env:
+ HEAD
+          #SONAR_PROJECTKEY: github
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+ parent of 17fdb8b (Update build.yml)
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
